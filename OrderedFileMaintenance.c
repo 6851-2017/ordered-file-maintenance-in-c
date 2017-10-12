@@ -106,7 +106,14 @@ int find_node(int index, int len) {
 void insert(int index, int elem) {
 	int node_index = find_leaf(index);
 	int level = H;
-	redistribute(node_index, logN);
+	int len = logN;
+	double density = get_density(node_index, len);
+	if (density == 1) {
+	  node_index = find_node(node_index, len*2);
+	  redistribute(node_index, len*2);
+	} else {
+	  redistribute(node_index, logN);
+	}
 	if (array[index] == -1) {
 		array[index] = elem;
 	} else {
@@ -114,8 +121,6 @@ void insert(int index, int elem) {
 		array[index] = elem;
 	}
 
-	int len = logN;
-	double density = get_density(node_index, len);
 	pair_double density_b = density_bound(level);
 	//printf("lower bound = %f, density = %f, upper bound = %f\n",density_b.x, density, density_b.y);
 	while (density >= density_b.y) {
