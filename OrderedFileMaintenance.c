@@ -66,14 +66,12 @@ void redistribute(int index, int len) {
 			array[i] = -1;
 		}
 	}
-	int k = 0;
-	for (int i = index; (i <= index+len) || (k<j); i+=2) {
-		array[i] = space[k++];
-		printf("##########%d###########\n",space[k]);
-	}
-	int k_saved = k;
-	for (int a = k_saved; a < j; a++) {
-		array[index+1+2*a] = space[k++];
+	double index_d = 0;
+	double step = ((double) len)/j;
+	for (int i = 0; i < j; i++) {
+	  int index = index_d;
+	  array[index] = space[i];
+	  index_d+=step;
 	}
 }
 
