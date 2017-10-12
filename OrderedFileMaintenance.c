@@ -115,10 +115,10 @@ void insert(int index, int elem) {
 	}
 
 	int len = logN;
-	int density = get_density(node_index, len);
+	double density = get_density(node_index, len);
 	pair_double density_b = density_bound(level);
-
-	while (density > density_b.y) {
+	//printf("lower bound = %f, density = %f, upper bound = %f\n",density_b.x, density, density_b.y);
+	while (density >= density_b.y) {
 		len*=2;
 		level--;
 		node_index = find_node(node_index, len);
