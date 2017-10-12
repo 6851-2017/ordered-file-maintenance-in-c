@@ -66,11 +66,11 @@ void redistribute(int index, int len) {
 			array[i] = -1;
 		}
 	}
-	double index_d = 0;
+	double index_d = index;
 	double step = ((double) len)/j;
 	for (int i = 0; i < j; i++) {
-	  int index = index_d;
-	  array[index] = space[i];
+	  int in = index_d;
+	  array[in] = space[i];
 	  index_d+=step;
 	}
 }
@@ -84,7 +84,6 @@ void scan(int index, int len) {
 }
 
 void slide_right(int index) {
-	int count;
 	int el = array[index];
 	while (array[++index] != -1) {
 		int temp = array[index];
