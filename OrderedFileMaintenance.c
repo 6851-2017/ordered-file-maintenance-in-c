@@ -11,8 +11,8 @@
 static int array[N] = {0};
 
 typedef struct _pair_int {
-	int x;
-	int y;
+	int x; // length in array
+	int y; // depth 
 } pair_int;
 
 typedef struct _pair_double {
@@ -30,6 +30,7 @@ double get_density(int index, int len) {
 	return full/len;
 }
 
+// find index of first 1-bit (least significant bit)
 static inline int bsf_word(int word) {
   int result;
   __asm__ volatile("bsf %1, %0" : "=r"(result) : "r"(word));
@@ -57,15 +58,23 @@ pair_double density_bound(int depth) {
 	return pair;
 }
 
+// Evenly redistribute elements in the ofm, given a range to look into
+// index: starting position in ofm structure
+// len: area to redistribute
 void redistribute(int index, int len) {
 	int space[len];
 	int j = 0;
+
+	// move all items in ofm in the range into
+	// a temp array
 	for (int i = index; i< index+len; i++) {
 		if (array[i]!=-1) {
 			space[j++] = array[i];
 			array[i] = -1;
 		}
 	}
+
+	// evenly redistribute for a uniform density
 	double index_d = index;
 	double step = ((double) len)/j;
 	for (int i = 0; i < j; i++) {
@@ -83,6 +92,7 @@ void scan(int index, int len) {
 	}
 }
 
+
 void slide_right(int index) {
 	int el = array[index];
 	while (array[++index] != -1) {
@@ -93,15 +103,17 @@ void slide_right(int index) {
 	array[index] = el;
 }
 
-
+// given index, return the starting index of the leaf it is in
 int find_leaf(int index) {
 	return (index/logN)*logN;
 }
 
+// same as find_leaf, but does it for any level in the tree
+// index: index in array
+// len: length of sub-level. 
 int find_node(int index, int len) {
 	return (index/len)*len;
 }
-
 
 void insert(int index, int elem) {
 	int node_index = find_leaf(index);
@@ -144,15 +156,16 @@ void setup(){
 	for (int i = 0; i < N; i++) {
 		array[i] = -1;
 	}
-	print_array(0, N);
+	print_array();
 	for (int i = 0; i < N; i+=2) {
 		array[i] = 10*i;
 	}
 }
 
+
 int main(){
 	setup();
-	print_array(0,N);
+	print_array();
 	while (1) {
 		printf("loc =");
 		int loc;
@@ -163,7 +176,5 @@ int main(){
 		insert(loc, elem);
 		print_array();
 	}
-
-
 }
 
