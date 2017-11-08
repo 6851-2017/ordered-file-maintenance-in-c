@@ -1,4 +1,4 @@
-#include "array_doubling.c"
+#include "linked_list.c"
 #include <time.h>
 
 
@@ -16,7 +16,8 @@ void testSequentialInsert(int size){
 	start = clock();
 	
 	for(int i=0; i<size; i++){
-		insert(&list, i,i);
+		node_t *node = get(&list, i);
+		insert_here(&list, node, i);
 	}
 	end = clock();
 
@@ -37,28 +38,26 @@ void testRandomInsert(int size){
 	clock_t start, end;
     double cpu_time_used = 0;
 	
+	start = clock();
 
 	for(int i=0; i<size; i++){
 		int index = rand()%size;
+		node_t *node = get(&list, index);
 		start = clock();
-		insert(&list,index,i);
+		insert_here(&list, node, i);
 		end = clock();
 		cpu_time_used += ((double) (end - start)) / CLOCKS_PER_SEC;
 
 	}
-	
-
-	//print_array(&list);
+		//print_array(&list);
 	printf("%d random insertions, time: %f \n", size, cpu_time_used);
 }
 
 
 int main(){
 	int size=10000;
-	printf("Beginning Testing Suite for Array Doubling. N is: %d\n", size);
+	printf("Beginning Testing Suite for Linked List. N is: %d\n", size);
 	testSequentialInsert(size);
 	testRandomInsert(size);	
 
 }
-
-

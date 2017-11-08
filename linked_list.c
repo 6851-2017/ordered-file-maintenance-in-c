@@ -98,6 +98,7 @@ void setup(list_t *list){
 	list->items = NULL;
 }
 
+/*
 int main(){
 	list_t list;
 	setup(&list);
@@ -122,6 +123,6 @@ int main(){
 		print_array(&list);
 	}
 
-
 }
+*/
 
