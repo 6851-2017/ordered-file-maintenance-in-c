@@ -64,6 +64,7 @@ void insert(list_t *list, int index, int elem) {
 }
 
 void print_array(list_t *list) {
+
 	for (int i = 0; i < list->size; i++) {
 		printf("%d ", list->items[i]);
 	}
@@ -78,7 +79,7 @@ void setup(list_t *list){
 		list->items[i] = 0;
 	}
 }
-
+/*
 int main(){
 	list_t list;
 	setup(&list);
@@ -94,6 +95,6 @@ int main(){
 		print_array(&list);
 	}
 
-
 }
+*/
 
