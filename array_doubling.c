@@ -33,6 +33,15 @@ void slide_right(list_t *list, int index) {
 	list->items[index] = el;
 }
 
+void slide_left(list_t *list, int index) {
+	while (index < list->size-1) {
+		list->items[index] = list->items[index+1];
+		index++;
+	}
+}
+
+
+
 
 void insert(list_t *list, int index, int elem) {
 	if (index > list->size) {
@@ -63,6 +72,35 @@ void insert(list_t *list, int index, int elem) {
 
 }
 
+void delete(list_t *list, int index) {
+	if (index > list->size) {
+		index = list->size;
+	}
+	if (list->size == list->capacity/4) {
+		int * new_items = (int*) malloc((list->capacity/2)*sizeof(*(list->items)));
+		list->capacity/=2;
+		int i = 0;
+		for (; i < index; i++) {
+			new_items[i] = list->items[i];
+		}
+		i++;
+		for (; i<list->size; i++) {
+			new_items[i-1] = list->items[i];
+		}
+		free(list->items);
+		list->items = new_items;
+		list->size--;
+
+	} else {
+		if (index < list->size) {
+			slide_left(list, index);
+		}
+		list->size--;
+	}
+
+
+}
+
 void print_array(list_t *list) {
 
 	for (int i = 0; i < list->size; i++) {
@@ -84,7 +122,8 @@ int main(){
 	list_t list;
 	setup(&list);
 	print_array(&list);
-	while (1) {
+	for (int i = 0; i < 24; i++) {
+		printf("## info size = %d. capacity = %d\n", list.size, list.capacity);
 		printf("loc =");
 		int loc;
 		scanf("%d", &loc);
@@ -92,6 +131,14 @@ int main(){
 		printf("elem =");
 		scanf("%d", &elem);
 		insert(&list, loc, elem);
+		print_array(&list);
+	}
+	for (int i = 0; i < 24; i++) {
+		printf("## info size = %d. capacity = %d\n", list.size, list.capacity);
+		printf("loc =");
+		int loc;
+		scanf("%d", &loc);
+		delete(&list, loc);
 		print_array(&list);
 	}
 
