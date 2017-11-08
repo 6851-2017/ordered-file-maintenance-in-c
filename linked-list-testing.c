@@ -11,17 +11,17 @@ void testSequentialInsert(int size){
 	//print_array(&list);
 
 	clock_t start, end;
-    double cpu_time_used;
-	
-	start = clock();
-	
+    double cpu_time_used = 0;
+		
 	for(int i=0; i<size; i++){
 		node_t *node = get(&list, i);
+		start = clock();
 		insert_here(&list, node, i);
-	}
-	end = clock();
+		end = clock();
+		cpu_time_used += ((double) (end - start)) / CLOCKS_PER_SEC;
 
-	cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+	}
+
 	//print_array(&list);
 	printf("%d sequential insertions, time: %f \n", size, cpu_time_used);
 }
