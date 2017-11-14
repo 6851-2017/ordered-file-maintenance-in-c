@@ -13,9 +13,10 @@ void testSequentialInsertOFM(list_t* list, int size){
     double cpu_time_used;
 	
 	start = clock();
-	
+	insert_first(list, 0);
+	int* item = get_first(list);
 	for(int i=0; i<size; i++){
-		insert(list, i,i);
+		item = insert_after(list, i, item);
 	}
 	end = clock();
 

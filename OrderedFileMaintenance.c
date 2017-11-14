@@ -128,7 +128,17 @@ int find_node(int index, int len) {
 	return (index/len)*len;
 }
 
-void insert( list_t* list, int index, int elem) {
+int* find_elem_pointer(list_t* list, int index, int elem){
+
+	int item = list->items[index];
+	while(item!=elem){
+		item = list->items[++index];
+	}
+	return &(list->items[index]);
+
+}
+
+int* insert( list_t* list, int index, int elem) {
 	int node_index = find_leaf(list, index);
 	int level = list->H;
 	int len = list->logN;
@@ -151,8 +161,8 @@ void insert( list_t* list, int index, int elem) {
 	}
 
 	pair_double density_b = density_bound(list, level);
-	//printf("lower bound = %f, density = %f, upper bound = %f\n",density_b.x, density, density_b.y);
-	// DENG: shouldn't you be recalculating density here after insertion?
+	density = get_density(list, node_index, len);
+	printf("lower bound = %f, density = %f, upper bound = %f\n",density_b.x, density, density_b.y);
 
 	while (density >= density_b.y) {
 		len*=2;
@@ -162,12 +172,14 @@ void insert( list_t* list, int index, int elem) {
 		density = get_density(list, node_index, len);
 	}
 	redistribute(list, node_index, len); 
+	return find_elem_pointer(list, node_index, elem);
 
 }
 
 int find_index(list_t* list, int* elem_pointer){
 	int* array_start = list->items; 
-	int index = (array_start-elem_pointer)/sizeof(int);
+	int index = (elem_pointer- array_start);
+	printf("index:%d, \n", index);
 	return index;
 }
 
@@ -200,23 +212,40 @@ int get_prev_elem_index(list_t* list, int* elem_pointer){
 
 // given an element value and pointer to an element,
 // insert before it.
-void insert_before(list_t* list, int new_elem, int* elem_pointer){
+int* insert_before(list_t* list, int new_elem, int* elem_pointer){
 	int elem_index = find_index(list, elem_pointer);
 	if(elem_index!=0){
-		insert(list, elem_index-1, new_elem);
-		return;
+		return insert(list, elem_index-1, new_elem);
 	}
+	return NULL;
 }
 
-void insert_after(list_t* list, int new_elem, int* elem_pointer){
+int* insert_after(list_t* list, int new_elem, int* elem_pointer){
 	int elem_index = find_index(list, elem_pointer);
 	if(elem_index<(list->N-2) && elem_index >0){
-		insert(list, elem_index+1, new_elem);
-		return;
+		return insert(list, elem_index+1, new_elem);
 	}
-
+	return NULL;
 }
 
+int* get_first(list_t* list){
+	int index = 0;
+	int elem = list->items[index];
+	while(elem==-1){
+		elem = list->items[++index];
+	}
+	if(index==list->N){
+		// return first index location by default
+		return list->items;
+	}
+	return &(list->items[index]);
+}
+
+// insert as the first item into the list.
+int* insert_first(list_t*list, int elem){
+	list->items[0] = elem;
+	return list->items;
+}
 
 void delete(list_t* list, int index){
 	int node_index = find_leaf(list, index);
@@ -264,24 +293,22 @@ void print_array(list_t* list) {
 	printf("\n\n");
 }
 
-
-// DENG: confused what's going on here. Copied from array doubling
 void setup(list_t* list){
 
 	list->N = N_0;
 	list->H = H_0;
 	list->logN = logN_0;
 	list->loglogN = loglogN_0;
-	list->items = (int*)malloc(8*sizeof(*(list->items)));
+	list->items = (int*)malloc(list->N*sizeof(*(list->items)));
 	for (int i = 0; i < list->N; i++) {
 		list->items[i] = -1;
 	}
 
-	for(int i=0; i< list->N; i++){
-		if(i%2==0){
-			list->items[i] = i*10;
-		}
-	}
+	// for(int i=0; i< list->N; i++){
+	// 	if(i%2==0){
+	// 		list->items[i] = i*10;
+	// 	}
+	// }
 
 
 	print_array(list);
