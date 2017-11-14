@@ -16,7 +16,7 @@ void testSequentialInsertOFM(list_t* list, int size){
 	insert_first(list, 0);
 	int* item = get_first(list);
 	for(int i=0; i<size; i++){
-		item = insert_after(list, i, item);
+		item = insert_after(list, i+1, item);
 	}
 	end = clock();
 

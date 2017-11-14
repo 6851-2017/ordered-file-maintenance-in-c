@@ -162,8 +162,6 @@ int* insert( list_t* list, int index, int elem) {
 
 	pair_double density_b = density_bound(list, level);
 	density = get_density(list, node_index, len);
-	printf("lower bound = %f, density = %f, upper bound = %f\n",density_b.x, density, density_b.y);
-
 	while (density >= density_b.y) {
 		len*=2;
 		level--;
@@ -179,7 +177,6 @@ int* insert( list_t* list, int index, int elem) {
 int find_index(list_t* list, int* elem_pointer){
 	int* array_start = list->items; 
 	int index = (elem_pointer- array_start);
-	printf("index:%d, \n", index);
 	return index;
 }
 
@@ -220,10 +217,13 @@ int* insert_before(list_t* list, int new_elem, int* elem_pointer){
 	return NULL;
 }
 
+// returns pointer to the element we just inserted!
 int* insert_after(list_t* list, int new_elem, int* elem_pointer){
 	int elem_index = find_index(list, elem_pointer);
-	if(elem_index<(list->N-2) && elem_index >0){
-		return insert(list, elem_index+1, new_elem);
+
+	if(elem_index<(list->N-2) && elem_index >=0){
+		int* new_elem_pointer =  insert(list, elem_index+1, new_elem);
+		return new_elem_pointer;
 	}
 	return NULL;
 }
