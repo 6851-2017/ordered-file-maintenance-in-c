@@ -57,7 +57,7 @@ void testRandomInsertOFM(list_t* list, int size){
 int main(){
 	list_t list;
 	printf("Beginning Testing Suite. N is: %d\n", N_0);
-	testSequentialInsertOFM(&list, N_0/4);
+	testSequentialInsertOFM(&list, 3*N_0/4);
 	//testRandomInsertOFM(N/4);	
 
 }

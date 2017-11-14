@@ -220,12 +220,14 @@ int* insert_before(list_t* list, int new_elem, int* elem_pointer){
 // returns pointer to the element we just inserted!
 int* insert_after(list_t* list, int new_elem, int* elem_pointer){
 	int elem_index = find_index(list, elem_pointer);
-
-	if(elem_index<(list->N-2) && elem_index >=0){
+	if(elem_index<(list->N-1) && elem_index >=0){
 		int* new_elem_pointer =  insert(list, elem_index+1, new_elem);
 		return new_elem_pointer;
 	}
-	return NULL;
+	else{
+		printf("returning null\n");
+		return NULL;
+	}
 }
 
 int* get_first(list_t* list){
