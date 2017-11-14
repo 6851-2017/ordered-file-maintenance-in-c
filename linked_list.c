@@ -17,6 +17,7 @@ typedef struct _list {
 
 
 
+
 int max(list_t *list) {
 	int current_max = MIN_INT;
 	node_t *node =  list->items;

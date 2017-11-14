@@ -120,12 +120,16 @@ void insert(int index, int elem) {
 	int level = H;
 	int len = logN;
 	double density = get_density(node_index, len);
+
+	// spill over into next level up, node is completely full.
 	if (density == 1) {
 	  node_index = find_node(node_index, len*2);
 	  redistribute(node_index, len*2);
 	} else {
 	  redistribute(node_index, logN);
 	}
+
+	// always deposit on the left
 	if (array[index] == -1) {
 		array[index] = elem;
 	} else {
@@ -135,6 +139,8 @@ void insert(int index, int elem) {
 
 	pair_double density_b = density_bound(level);
 	//printf("lower bound = %f, density = %f, upper bound = %f\n",density_b.x, density, density_b.y);
+	// DENG: shouldn't you be recalculating density here after insertion?
+
 	while (density >= density_b.y) {
 		len*=2;
 		level--;
@@ -145,6 +151,89 @@ void insert(int index, int elem) {
 	redistribute(node_index, len); 
 
 }
+
+int find_index(int* elem_pointer){
+	int* array_start = &array[0];
+	int index = (array_start-elem_pointer)/sizeof(int);
+	return index;
+}
+
+// given an element pointer, find the next element index after it
+int get_next_elem_index(int* elem_pointer){
+	int index = find_index(elem_pointer);
+	index++;
+	while(index<N){
+		if(array[index]!=-1){
+			return index;
+		}
+		index++;
+	}
+	return -1;
+}
+
+// given an element pointer, find previous element index after it
+int get_prev_elem_index(int* elem_pointer){
+	int index = find_index(elem_pointer);
+	index--;
+	while(index>=0){
+		if(array[index]!=-1){
+			return index;
+		}
+		index--;
+	}
+	return -1;
+}
+
+
+// given an element value and pointer to an element,
+// insert before it.
+void insert_before(int new_elem, int* elem_pointer){
+	int elem_index = find_index(elem_pointer);
+	if(elem_index!=0){
+		insert(elem_index-1, new_elem);
+		return;
+	}
+	// TODO: handling inserts at index 0.
+
+}
+
+
+void delete(int index){
+	int node_index = find_leaf(index);
+	int level = H;
+	int len = logN;
+	pair_double density_b = density_bound(level);
+	double low_bound = density_b.x;
+
+	if(array[index]== -1){
+		printf("Element does not exist at index: %d \n", index);
+		return;
+	}
+	//deletion
+	array[index] = -1;
+
+	// redistribute 'recursively' until we are within density bounds.
+	double density = get_density(node_index, len);
+	while(density < density_b.x){
+		len*=2;
+		level--;
+		node_index = find_node(node_index, len);
+		pair_double density_b = density_bound(level);
+		density = get_density(node_index, len);
+	}
+	redistribute(node_index, len);
+}
+
+void delete_before(int* elem_pointer){
+	int elem_index = find_index(elem_pointer);
+	if(elem_index!=0 && elem_index<N){
+		delete(elem_index-1);
+		return;
+	}
+
+	// How to delete the last item?
+}
+
 
 void print_array() {
 	for (int i = 0; i < N; i++) {
@@ -181,6 +270,16 @@ int main(){
 		insert(loc, elem);
 		print_array();
 	}
+
+	// delete
+	// while (1) {
+	// 	printf("loc =");
+	// 	int loc;
+	// 	scanf("%d", &loc);
+
+	// 	delete(loc);
+	// 	print_array();
+	// }
 }
 
 
