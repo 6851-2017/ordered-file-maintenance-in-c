@@ -193,7 +193,14 @@ void insert_before(int new_elem, int* elem_pointer){
 		insert(elem_index-1, new_elem);
 		return;
 	}
-	// TODO: handling inserts at index 0.
+}
+
+void insert_after(int new_elem, int* elem_pointer){
+	int elem_index = find_index(elem_pointer);
+	if(elem_index<(N-2) && elem_index >0){
+		insert(elem_index+1, new_elem);
+		return;
+	}
 
 }
 
@@ -226,13 +233,20 @@ void delete(int index){
 
 void delete_before(int* elem_pointer){
 	int elem_index = find_index(elem_pointer);
-	if(elem_index!=0 && elem_index<N){
+	if(elem_index>0 && elem_index<N){
 		delete(elem_index-1);
 		return;
 	}
-
-	// How to delete the last item?
 }
+
+void delete_after(int* elem_pointer){
+	int elem_index = find_index(elem_pointer);
+	if(elem_index<(N-2) && elem_index >=0){
+		delete(elem_index+1);
+		return;
+	}
+}
+
 
 
 void print_array() {
