@@ -2,13 +2,24 @@
 #include <stdlib.h>
 
 
-#define loglogN 3
-#define logN (1 << loglogN)
-#define N (1 << logN)
-#define H (logN - loglogN)
+#define loglogN_0 3
+#define logN_0 (1 << loglogN_0)
+#define N_0 (1 << logN_0)
+#define H_0 (logN_0 - loglogN_0)
 
 
-static int array[N] = {0};
+static int array[N_0] = {0};
+
+typedef struct _list {
+	int N;
+	int H;
+	int logN;
+	int loglogN;
+	int* items;
+
+} list_t;
+
+
 
 typedef struct _pair_int {
 	int x; // length in array
@@ -20,10 +31,11 @@ typedef struct _pair_double {
 	double y;
 } pair_double;
 
-double get_density(int index, int len) {
+double get_density(list_t* list, int index, int len) {
+
 	double full = 0;
 	for (int i = index; i < index+len; i++) {
-		if (array[i] != -1) {
+		if (list->items[i] != -1) {
 			full++;
 		}
 	}
@@ -37,40 +49,41 @@ static inline int bsf_word(int word) {
   return result;
 }
 
-int get_depth(int len) {
-	return bsf_word(N/len);
+int get_depth(list_t* list, int len) {
+	return bsf_word(list->N/len);
 }
 
 
-pair_int get_parent(int index, int len) {
+pair_int get_parent(list_t* list, int index, int len) {
 	int parent_len = len*2;
-	int depth = get_depth(len);
+	int depth = get_depth(list, len);
 	pair_int pair;
 	pair.x = parent_len;
 	pair.y = depth;
 	return pair;
 }
 
-pair_double density_bound(int depth) {
+pair_double density_bound(list_t* list, int depth) {
 	pair_double pair;
-	pair.x = 1.0/2.0 - (( .25*depth)/H);
-	pair.y = 3.0/4.0 + ((.25*depth)/H);
+	pair.x = 1.0/2.0 - (( .25*depth)/list->H);
+	pair.y = 3.0/4.0 + ((.25*depth)/list->H);
 	return pair;
 }
+
 
 // Evenly redistribute elements in the ofm, given a range to look into
 // index: starting position in ofm structure
 // len: area to redistribute
-void redistribute(int index, int len) {
+void redistribute(list_t* list, int index, int len) {
 	int space[len];
 	int j = 0;
 
 	// move all items in ofm in the range into
 	// a temp array
 	for (int i = index; i< index+len; i++) {
-		if (array[i]!=-1) {
-			space[j++] = array[i];
-			array[i] = -1;
+		if (list->items[i]!=-1) {
+			space[j++] = list->items[i];
+			list->items[i] = -1;
 		}
 	}
 
@@ -79,33 +92,33 @@ void redistribute(int index, int len) {
 	double step = ((double) len)/j;
 	for (int i = 0; i < j; i++) {
 	  int in = index_d;
-	  array[in] = space[i];
+	  list->items[in] = space[i];
 	  index_d+=step;
 	}
 }
 
-void scan(int index, int len) {
+void scan(list_t* list, int index, int len) {
 	for (int i = index; i < index+len; i++) {
-		if (array[i]!=-1) {
-			printf("%d ", array[i]);
+		if (list->items[i]!=-1) {
+			printf("%d ", list->items[i]);
 		}
 	}
 }
 
 
-void slide_right(int index) {
-	int el = array[index];
-	while (array[++index] != -1) {
+void slide_right(list_t* list, int index) {
+	int el = list->items[index];
+	while (list->items[++index] != -1) {
 		int temp = array[index];
-		array[index] = el;
+		list->items[index] = el;
 		el = temp;
 	}
 	array[index] = el;
 }
 
 // given index, return the starting index of the leaf it is in
-int find_leaf(int index) {
-	return (index/logN)*logN;
+int find_leaf(list_t* list, int index) {
+	return (index/list->logN)*list->logN;
 }
 
 // same as find_leaf, but does it for any level in the tree
@@ -115,29 +128,29 @@ int find_node(int index, int len) {
 	return (index/len)*len;
 }
 
-void insert(int index, int elem) {
-	int node_index = find_leaf(index);
-	int level = H;
-	int len = logN;
-	double density = get_density(node_index, len);
+void insert( list_t* list, int index, int elem) {
+	int node_index = find_leaf(list, index);
+	int level = list->H;
+	int len = list->logN;
+	double density = get_density(list, node_index, len);
 
 	// spill over into next level up, node is completely full.
 	if (density == 1) {
 	  node_index = find_node(node_index, len*2);
-	  redistribute(node_index, len*2);
+	  redistribute(list, node_index, len*2);
 	} else {
-	  redistribute(node_index, logN);
+	  redistribute(list, node_index, len);
 	}
 
 	// always deposit on the left
-	if (array[index] == -1) {
-		array[index] = elem;
+	if (list->items[index] == -1) {
+		list->items[index] = elem;
 	} else {
-		slide_right(index);
-		array[index] = elem;
+		slide_right(list, index);
+		list->items[index] = elem;
 	}
 
-	pair_double density_b = density_bound(level);
+	pair_double density_b = density_bound(list, level);
 	//printf("lower bound = %f, density = %f, upper bound = %f\n",density_b.x, density, density_b.y);
 	// DENG: shouldn't you be recalculating density here after insertion?
 
@@ -145,25 +158,25 @@ void insert(int index, int elem) {
 		len*=2;
 		level--;
 		node_index = find_node(node_index, len);
-		pair_double density_b = density_bound(level);
-		density = get_density(node_index, len);
+		pair_double density_b = density_bound(list, level);
+		density = get_density(list, node_index, len);
 	}
-	redistribute(node_index, len); 
+	redistribute(list, node_index, len); 
 
 }
 
-int find_index(int* elem_pointer){
-	int* array_start = &array[0];
+int find_index(list_t* list, int* elem_pointer){
+	int* array_start = list->items; 
 	int index = (array_start-elem_pointer)/sizeof(int);
 	return index;
 }
 
 // given an element pointer, find the next element index after it
-int get_next_elem_index(int* elem_pointer){
-	int index = find_index(elem_pointer);
+int get_next_elem_index(list_t* list, int* elem_pointer){
+	int index = find_index(list, elem_pointer);
 	index++;
-	while(index<N){
-		if(array[index]!=-1){
+	while(index<list->N){
+		if(list->items[index]!=-1){
 			return index;
 		}
 		index++;
@@ -172,11 +185,11 @@ int get_next_elem_index(int* elem_pointer){
 }
 
 // given an element pointer, find previous element index after it
-int get_prev_elem_index(int* elem_pointer){
-	int index = find_index(elem_pointer);
+int get_prev_elem_index(list_t* list, int* elem_pointer){
+	int index = find_index(list, elem_pointer);
 	index--;
 	while(index>=0){
-		if(array[index]!=-1){
+		if(list->items[index]!=-1){
 			return index;
 		}
 		index--;
@@ -187,93 +200,98 @@ int get_prev_elem_index(int* elem_pointer){
 
 // given an element value and pointer to an element,
 // insert before it.
-void insert_before(int new_elem, int* elem_pointer){
-	int elem_index = find_index(elem_pointer);
+void insert_before(list_t* list, int new_elem, int* elem_pointer){
+	int elem_index = find_index(list, elem_pointer);
 	if(elem_index!=0){
-		insert(elem_index-1, new_elem);
+		insert(list, elem_index-1, new_elem);
 		return;
 	}
 }
 
-void insert_after(int new_elem, int* elem_pointer){
-	int elem_index = find_index(elem_pointer);
-	if(elem_index<(N-2) && elem_index >0){
-		insert(elem_index+1, new_elem);
+void insert_after(list_t* list, int new_elem, int* elem_pointer){
+	int elem_index = find_index(list, elem_pointer);
+	if(elem_index<(list->N-2) && elem_index >0){
+		insert(list, elem_index+1, new_elem);
 		return;
 	}
 
 }
 
 
-void delete(int index){
-	int node_index = find_leaf(index);
-	int level = H;
-	int len = logN;
-	pair_double density_b = density_bound(level);
+void delete(list_t* list, int index){
+	int node_index = find_leaf(list, index);
+	int level = list->H;
+	int len = list->logN;
+	pair_double density_b = density_bound(list, level);
 	double low_bound = density_b.x;
 
-	if(array[index]== -1){
+	if(list->items[index]== -1){
 		printf("Element does not exist at index: %d \n", index);
 		return;
 	}
 	//deletion
-	array[index] = -1;
+	list->items[index] = -1;
 
 	// redistribute 'recursively' until we are within density bounds.
-	double density = get_density(node_index, len);
+	double density = get_density(list, node_index, len);
 	while(density < density_b.x){
 		len*=2;
 		level--;
 		node_index = find_node(node_index, len);
-		pair_double density_b = density_bound(level);
-		density = get_density(node_index, len);
+		pair_double density_b = density_bound(list, level);
+		density = get_density(list, node_index, len);
 	}
-	redistribute(node_index, len);
+	redistribute(list, node_index, len);
 }
 
-void delete_before(int* elem_pointer){
-	int elem_index = find_index(elem_pointer);
-	if(elem_index>0 && elem_index<N){
-		delete(elem_index-1);
-		return;
-	}
-}
-
-void delete_after(int* elem_pointer){
-	int elem_index = find_index(elem_pointer);
-	if(elem_index<(N-2) && elem_index >=0){
-		delete(elem_index+1);
+void delete_here(list_t* list, int* elem_pointer){
+	int elem_index = find_index(list, elem_pointer);
+	if(elem_index>=0 && elem_index<list->N){
+		delete(list, elem_index);
 		return;
 	}
 }
 
 
-
-void print_array() {
-	for (int i = 0; i < N; i++) {
-		if (array[i] == -1) {
+void print_array(list_t* list) {
+	for (int i = 0; i < list->N; i++) {
+		if (list->items[i] == -1) {
 			printf("/ ");
 		} else {
-			printf("%d ", array[i]);
+			printf("%d ", list->items[i]);
 		}
 	}
 	printf("\n\n");
 }
 
-void setup(){
-	for (int i = 0; i < N; i++) {
-		array[i] = -1;
+
+// DENG: confused what's going on here. Copied from array doubling
+void setup(list_t* list){
+
+	list->N = N_0;
+	list->H = H_0;
+	list->logN = logN_0;
+	list->loglogN = loglogN_0;
+	list->items = (int*)malloc(8*sizeof(*(list->items)));
+	for (int i = 0; i < list->N; i++) {
+		list->items[i] = -1;
 	}
-	print_array();
-	for (int i = 0; i < N; i+=2) {
-		array[i] = 10*i;
+
+	for(int i=0; i< list->N; i++){
+		if(i%2==0){
+			list->items[i] = i*10;
+		}
 	}
+
+
+	print_array(list);
 }
 
-
+/*
 int main(){
-	setup();
-	print_array();
+	list_t list;
+	setup(&list);
+	print_array(&list);
 	while (1) {
 		printf("loc =");
 		int loc;
@@ -281,8 +299,8 @@ int main(){
 		int elem;
 		printf("elem =");
 		scanf("%d", &elem);
-		insert(loc, elem);
-		print_array();
+		insert(&list, loc, elem);
+		print_array(&list);
 	}
 
 	// delete
@@ -296,4 +314,4 @@ int main(){
 	// }
 }
 
-
+*/

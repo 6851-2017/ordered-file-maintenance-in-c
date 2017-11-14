@@ -109,9 +109,13 @@ void print_array(list_t *list) {
 	printf("\n\n");
 }
 
+
+
 void setup(list_t *list){
 	list->size = 0;
 	list->capacity = 8;
+
+	// DENG: was this supposed tobe sizeof (list->capacity?)
 	list->items = (int*) malloc(8*sizeof(*(list->items)));
 	for (int i = 0; i < list->capacity; i++) {
 		list->items[i] = 0;
