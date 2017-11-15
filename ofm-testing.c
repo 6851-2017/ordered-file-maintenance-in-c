@@ -10,17 +10,17 @@ void testSequentialInsertOFM(list_t* list, int size){
 	print_array(list);
 
 	clock_t start, end;
-    double cpu_time_used;
+    double cpu_time_used = 0;
 	
-	start = clock();
 	insert_first(list, 0);
 	int* item = get_first(list);
 	for(int i=0; i<size; i++){
+		start = clock();
 		item = insert_after(list, i+1, item);
+		end = clock();
+		cpu_time_used += ((double) (end - start)) / CLOCKS_PER_SEC;
 	}
-	end = clock();
 
-	cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
 	print_array(list);
 	printf("%d sequential insertions, time: %f \n", size, cpu_time_used);
 }
@@ -40,19 +40,23 @@ void testRandomInsertOFM(list_t* list, int size){
 	print_array(list);
 
 	clock_t start, end;
-    double cpu_time_used;
+    double cpu_time_used = 0;
 	
-	start = clock();
 
-	for(int i=0; i<size; i++)
-		{insert(list, randomInsert[i],i);}
-	
-	end = clock();
-
-	cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+	for(int i=0; i<size; i++){
+		start = clock();
+		insert(list, randomInsert[i],i);
+		end = clock();
+		cpu_time_used += ((double) (end - start)) / CLOCKS_PER_SEC;
+	}
 	print_array(list);
 	printf("%d random insertions, time: %f \n", size, cpu_time_used);
 }
+
+
+//sorting -> insert a bunch of elts, and maintain the fact that they're always sorted. 
+
+
 
 int main(){
 	list_t list;

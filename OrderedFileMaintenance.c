@@ -181,29 +181,29 @@ int find_index(list_t* list, int* elem_pointer){
 }
 
 // given an element pointer, find the next element index after it
-int get_next_elem_index(list_t* list, int* elem_pointer){
+int* get_next_elem_index(list_t* list, int* elem_pointer){
 	int index = find_index(list, elem_pointer);
 	index++;
 	while(index<list->N){
 		if(list->items[index]!=-1){
-			return index;
+			return list->items+index;
 		}
 		index++;
 	}
-	return -1;
+	return NULL;
 }
 
 // given an element pointer, find previous element index after it
-int get_prev_elem_index(list_t* list, int* elem_pointer){
+int* get_prev_elem_index(list_t* list, int* elem_pointer){
 	int index = find_index(list, elem_pointer);
 	index--;
 	while(index>=0){
 		if(list->items[index]!=-1){
-			return index;
+			return list->items+index;
 		}
 		index--;
 	}
-	return -1;
+	return NULL;
 }
 
 
