@@ -24,6 +24,25 @@ void testSequentialInsertOFM(list_t* list, int size){
 	printf("%d sequential insertions, time: %f \n", size, cpu_time_used);
 }
 
+// to be called after sequential insert, delete some of the elements.
+void testSequentialDelete(list_t *list, int size){
+	printf("Before deletion: \n");
+	print_array(list);
+	clock_t start, end;
+    double cpu_time_used = 0;
+	int* item = get_first(list);
+    for(int i=0; i<size; i++){
+    	int* next_item = get_first(list);
+    	start = clock();
+    	delete_here(list, item);
+    	end = clock();
+    	cpu_time_used += ((double) (end - start)) / CLOCKS_PER_SEC;
+    	item = next_item;
+    }
+    print_array(list);
+	printf("%d sequential deletions, time: %f \n", size, cpu_time_used);
+}
+
 // inserts N elements at random locations into OFM. 
 // prints out itme it takes for N operations
 void testRandomInsertOFM(list_t* list, int size){
@@ -63,6 +82,7 @@ int main(){
 	setup(&list);
 	printf("Beginning Testing Suite. N is: %d\n", list.N);
 	testSequentialInsertOFM(&list, 82);
+	testSequentialDelete(&list, 40);
 	//testRandomInsertOFM(N/4);	
 
 }

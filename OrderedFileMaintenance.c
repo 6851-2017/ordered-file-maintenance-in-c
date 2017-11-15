@@ -279,7 +279,6 @@ void delete(list_t* list, int index){
 	int len = list->logN;
 	pair_double density_b = density_bound(list, level);
 	double low_bound = density_b.x;
-
 	if(list->items[index]== -1){
 		printf("Element does not exist at index: %d \n", index);
 		return;
@@ -332,13 +331,6 @@ void setup(list_t* list){
 	for (int i = 0; i < list->N; i++) {
 		list->items[i] = -1;
 	}
-
-	// for(int i=0; i< list->N; i++){
-	// 	if(i%2==0){
-	// 		list->items[i] = i*10;
-	// 	}
-	// }
-
 
 	print_array(list);
 }
