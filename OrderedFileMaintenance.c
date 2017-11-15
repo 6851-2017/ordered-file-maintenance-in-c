@@ -2,19 +2,10 @@
 #include <stdlib.h>
 
 
-#define loglogN_0 3
-#define logN_0 (1 << loglogN_0)
-#define N_0 (1 << logN_0)
-#define H_0 (logN_0 - loglogN_0)
-
-
-static int array[N_0] = {0};
-
 typedef struct _list {
 	int N;
 	int H;
 	int logN;
-	int loglogN;
 	int* items;
 
 } list_t;
@@ -46,6 +37,12 @@ double get_density(list_t* list, int index, int len) {
 static inline int bsf_word(int word) {
   int result;
   __asm__ volatile("bsf %1, %0" : "=r"(result) : "r"(word));
+  return result;
+}
+
+static inline int bsr_word(int word) {
+  int result;
+  __asm__ volatile("bsr %1, %0" : "=r"(result) : "r"(word));
   return result;
 }
 
@@ -97,6 +94,26 @@ void redistribute(list_t* list, int index, int len) {
 	}
 }
 
+int isPowerOfTwo (int x) {
+  return ((x != 0) && !(x & (x - 1)));
+}
+
+void double_list(list_t* list) {
+	list->N*=2;
+	list->logN = (1 << bsr_word(bsr_word(list->N)+1));
+	list->H = bsr_word(list->N/list->logN);
+	int *new_array = (int*)malloc(list->N*sizeof(*(list->items)));
+	for (int i = 0; i < list->N/2; i++) {
+		new_array[i] = list->items[i];
+	}
+	for (int i = list->N/2; i < list->N; i++) {
+		new_array[i] = -1;
+	}
+	free(list->items);
+	list->items = new_array;
+	redistribute(list, 0, list->N);
+}
+
 void scan(list_t* list, int index, int len) {
 	for (int i = index; i < index+len; i++) {
 		if (list->items[i]!=-1) {
@@ -109,11 +126,11 @@ void scan(list_t* list, int index, int len) {
 void slide_right(list_t* list, int index) {
 	int el = list->items[index];
 	while (list->items[++index] != -1) {
-		int temp = array[index];
+		int temp = list->items[index];
 		list->items[index] = el;
 		el = temp;
 	}
-	array[index] = el;
+	list->items[index] = el;
 }
 
 // given index, return the starting index of the leaf it is in
@@ -162,12 +179,19 @@ int* insert( list_t* list, int index, int elem) {
 
 	pair_double density_b = density_bound(list, level);
 	density = get_density(list, node_index, len);
+	//printf("density %f, upperbound %f, len = %d, N = %d, logN = %d\n", density, density_b.y, len, list->N, list->logN);
 	while (density >= density_b.y) {
 		len*=2;
-		level--;
-		node_index = find_node(node_index, len);
-		pair_double density_b = density_bound(list, level);
-		density = get_density(list, node_index, len);
+		if (len <= list->N){
+			level--;
+			node_index = find_node(node_index, len);
+			density_b = density_bound(list, level);
+			density = get_density(list, node_index, len);
+		} else {
+			double_list(list);
+			return find_elem_pointer(list, 0, elem);
+		}
+		//printf("density %f, upperbound %f, len = %d, N = %d, logN = %d\n", density, density_b.y, len, list->N, list->logN);
 	}
 	redistribute(list, node_index, len); 
 	return find_elem_pointer(list, node_index, elem);
@@ -297,10 +321,13 @@ void print_array(list_t* list) {
 
 void setup(list_t* list){
 
-	list->N = N_0;
-	list->H = H_0;
-	list->logN = logN_0;
-	list->loglogN = loglogN_0;
+	list->N = 16;
+	printf("%d\n", bsf_word(list->N));
+	printf("%d\n", bsf_word(5));
+	list->logN = (1 << bsr_word(bsr_word(list->N)+1));
+	list->H = bsr_word(list->N/list->logN);
+	//printf("N = %d, logN = %d, loglogN = %d, H = %d\n", list->N, list->logN, list->loglogN, list->H);
+	
 	list->items = (int*)malloc(list->N*sizeof(*(list->items)));
 	for (int i = 0; i < list->N; i++) {
 		list->items[i] = -1;
