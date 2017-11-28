@@ -24,6 +24,39 @@ void testSequentialInsertOFM(list_t* list, int size){
 	printf("%d sequential insertions, time: %f \n", size, cpu_time_used);
 }
 
+void testInsertSortedRandom(list_t* list, int size){
+
+	clock_t start, end;
+    double cpu_time_used = 0;
+	list_t list;
+	setup(&list);
+
+	insert_first(list, 0);
+	for(int i=0; i<size; i++){
+		int item = rand()%100;
+		start = clock();
+		//insert_sorted(list, i+1, item);
+		end = clock();
+		cpu_time_used += ((double) (end - start)) / CLOCKS_PER_SEC;		
+	}
+
+	// verify correctness
+
+	for(int i=0; i<size-1; i++){
+
+		int cur_val = list->items[i];
+		int next_val = list->items[i+1];
+		if(next_val<cur_val){
+			printf("Insert Sorted Is not working!");
+			break;
+		}
+
+	}
+	printf("%d random insertions into an ordered list of size:%d, time: %f \n", size, size, cpu_time_used);
+
+}
+
+
 // to be called after sequential insert, delete some of the elements.
 void testSequentialDelete(list_t *list, int size){
 	printf("Before deletion: \n");
