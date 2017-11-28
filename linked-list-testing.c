@@ -136,7 +136,7 @@ list_t testRandomInsert(int size){
 
 
 int main(){
-	int size=100000;
+	int size=100;
 	// printf("Beginning Testing Suite for Linked List. N is: %d\n", size);
 	// testSequentialInsert(size);
 	// list_t list = testRandomInsert(size);	

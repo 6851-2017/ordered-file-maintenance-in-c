@@ -25,7 +25,7 @@ void testSequentialInsertOFM(list_t* list, int size){
 }
 
 void testInsertSortedRandom(list_t* list, int size){
-
+	printf("Testing Insert Sorted Random for OFM");
 	clock_t start, end;
     double cpu_time_used = 0;
 	list_t list;
@@ -36,6 +36,7 @@ void testInsertSortedRandom(list_t* list, int size){
 		int item = rand()%100;
 		start = clock();
 		//insert_sorted(list, i+1, item);
+		insert_sorted(&list, item);
 		end = clock();
 		cpu_time_used += ((double) (end - start)) / CLOCKS_PER_SEC;		
 	}
@@ -56,6 +57,37 @@ void testInsertSortedRandom(list_t* list, int size){
 
 }
 
+void testInsertSortedSequential(list_t* list, int size){
+	printf("Testing Insert Sorted Reverse Sequential for OFM");
+
+	clock_t start, end;
+    double cpu_time_used = 0;
+	list_t list;
+	setup(&list);
+
+	insert_first(list, 0);
+	for(int i=size-1; i>=0; i--){
+		start = clock();
+		insert_sorted(&list, i);
+		end = clock();
+		cpu_time_used += ((double) (end - start)) / CLOCKS_PER_SEC;		
+	}
+
+	// verify correctness
+
+	for(int i=0; i<size-1; i++){
+
+		int cur_val = list->items[i];
+		int next_val = list->items[i+1];
+		if(next_val<cur_val){
+			printf("Insert Sorted Is not working!");
+			break;
+		}
+
+	}
+	printf("%d random insertions into an ordered list of size:%d, time: %f \n", size, size, cpu_time_used);
+
+}
 
 // to be called after sequential insert, delete some of the elements.
 void testSequentialDelete(list_t *list, int size){
