@@ -62,7 +62,11 @@ pair_int get_parent(list_t* list, int index, int len) {
 
 pair_double density_bound(list_t* list, int depth) {
 	pair_double pair;
-	pair.x = 1.0/2.0 - (( .25*depth)/list->H);
+
+	// between 1/4 and 1/2
+	// pair.x = 1.0/2.0 - (( .25*depth)/list->H);
+	// between 1/8 and 1/4
+	pair.x = 1.0/4.0 - (( .125*depth)/list->H);
 	pair.y = 3.0/4.0 + ((.25*depth)/list->H);
 	return pair;
 }
@@ -108,6 +112,22 @@ void double_list(list_t* list) {
 	}
 	for (int i = list->N/2; i < list->N; i++) {
 		new_array[i] = -1;
+	}
+	free(list->items);
+	list->items = new_array;
+	redistribute(list, 0, list->N);
+}
+
+void half_list(list_t* list) {
+	list->N/=2;
+	list->logN = (1 << bsr_word(bsr_word(list->N)+1));
+	list->H = bsr_word(list->N/list->logN);
+	int *new_array = (int*)malloc(list->N*sizeof(*(list->items)));
+	int j = 0;
+	for (int i = 0; i < list->N*2; i++) {
+		if (list->items[i] != -1) {
+			new_array[j++] = list->items[i];
+		}
 	}
 	free(list->items);
 	list->items = new_array;
@@ -230,7 +250,6 @@ int* get_prev_elem_index(list_t* list, int* elem_pointer){
 	return NULL;
 }
 
-
 // given an element value and pointer to an element,
 // insert before it.
 int* insert_before(list_t* list, int new_elem, int* elem_pointer){
@@ -290,10 +309,15 @@ void delete(list_t* list, int index){
 	double density = get_density(list, node_index, len);
 	while(density < density_b.x){
 		len*=2;
-		level--;
-		node_index = find_node(node_index, len);
-		pair_double density_b = density_bound(list, level);
-		density = get_density(list, node_index, len);
+		if (len <= list->N){
+			level--;
+			node_index = find_node(node_index, len);
+			pair_double density_b = density_bound(list, level);
+			density = get_density(list, node_index, len);
+		} else {
+			half_list(list);
+			return;
+		}
 	}
 	redistribute(list, node_index, len);
 }
@@ -322,7 +346,6 @@ void setup(list_t* list){
 
 	list->N = 16;
 	printf("%d\n", bsf_word(list->N));
-	printf("%d\n", bsf_word(5));
 	list->logN = (1 << bsr_word(bsr_word(list->N)+1));
 	list->H = bsr_word(list->N/list->logN);
 	//printf("N = %d, logN = %d, loglogN = %d, H = %d\n", list->N, list->logN, list->loglogN, list->H);
@@ -335,7 +358,7 @@ void setup(list_t* list){
 	print_array(list);
 }
 
-/*
+
 int main(){
 	list_t list;
 	setup(&list);
@@ -362,4 +385,4 @@ int main(){
 	// }
 }
 
-*/
+
