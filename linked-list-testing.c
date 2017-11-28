@@ -34,7 +34,6 @@ void testInsertSortedReverse(int size){
 		cpu_time_used += ((double) (end - start)) / CLOCKS_PER_SEC;		
 	}
 
-	printf("Finished inserting!");
 	node_t cur = list.items[0];
 	for(int i=0; i<size-1; i++){
 		int val = cur.val;
@@ -79,7 +78,7 @@ void testInsertSortedRandom(int size){
 			cur = *(cur.next);
 	    }
 	}
-	printf("%d reverse sequential insertions into an ordered list of size:%d, time: %f \n", size/2, size, cpu_time_used);
+	printf("%d random insertions into an ordered list of size:%d, time: %f \n", size/2, size, cpu_time_used);
 
 }
 
