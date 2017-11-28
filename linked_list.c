@@ -69,7 +69,7 @@ void insert_here(list_t *list, node_t *node, int elem) {
 
 void insert_sorted(list_t *list, int elem) {
 	node_t *node =  list->items;
-	while (node->val <= elem) {
+	while (node->val <= elem && node->next) {
 		node = node->next;
 	}
 	insert_here(list, node, elem);
