@@ -67,6 +67,14 @@ void insert_here(list_t *list, node_t *node, int elem) {
 	node->prev = new;
 }
 
+void insert_sorted(list_t *list, int elem) {
+	node_t *node =  list->items;
+	while (node->val <= elem) {
+		node = node->next;
+	}
+	insert_here(list, node, elem);
+}
+
 void delete_here(list_t *list, node_t *node) {
 	// if the list is empty
 	if (!(list->items)) {
@@ -126,4 +134,3 @@ int main(){
 
 }
 */
-
