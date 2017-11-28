@@ -57,6 +57,7 @@ void testInsertSortedRandom(int size){
     double cpu_time_used = 0;
 	list_t list;
 	setup(&list);
+	insert_here(&list, NULL, 999999999);
 
 	// populate list with items
 	for(int i=0; i<size-1; i++){
@@ -70,11 +71,13 @@ void testInsertSortedRandom(int size){
 	node_t cur = list.items[0];
 	for(int i=0; i<size-1; i++){
 		int val = cur.val;
-		int next_val = cur.next->val;
-		if(next_val<val){
-			printf("Insert Sorted does not work!");
-		}
-		cur = *(cur.next);
+		if (cur.next){
+			int next_val = cur.next->val;
+			if(next_val<val){
+				printf("Insert Sorted does not work!");
+			}
+			cur = *(cur.next);
+	    }
 	}
 	printf("%d reverse sequential insertions into an ordered list of size:%d, time: %f \n", size/2, size, cpu_time_used);
 

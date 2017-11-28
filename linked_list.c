@@ -69,6 +69,14 @@ void insert_here(list_t *list, node_t *node, int elem) {
 
 void insert_sorted(list_t *list, int elem) {
 	node_t *node =  list->items;
+	if (!node) {
+		node = (node_t*) malloc(sizeof(*node));
+		node->val = elem;
+		node->next = list->items;
+		node->prev = NULL;
+		list->items = node;
+		return;
+	}
 	while (node->val <= elem && node->next) {
 		node = node->next;
 	}
