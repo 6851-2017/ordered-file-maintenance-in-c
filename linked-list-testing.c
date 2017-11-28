@@ -18,6 +18,7 @@ void testFindMax(list_t* list , int size){
 
 // Inserted items in reverse order, should come out as the correct order in the end
 void testInsertSortedReverse(list_t* list, int size){
+	printf("Testing Insert Sorted with Reverse Values: \n");
 
 	clock_t start, end;
     double cpu_time_used = 0;
@@ -28,7 +29,7 @@ void testInsertSortedReverse(list_t* list, int size){
 	for(int i=size-1; i>=0; i--){
 
 		start = clock();
-//		insert_sorted(list, i);
+		insert_sorted(&list, i);
 		end = clock();
 		cpu_time_used += ((double) (end - start)) / CLOCKS_PER_SEC;		
 	}
@@ -50,6 +51,7 @@ void testInsertSortedReverse(list_t* list, int size){
 // Inserted items in reverse order, should come out as the correct order in the end
 void testInsertSortedRandom(list_t* list, int size){
 
+	printf("Testing Insert Sorted with Random Values: \n");
 	clock_t start, end;
     double cpu_time_used = 0;
 	list_t list;
@@ -59,7 +61,7 @@ void testInsertSortedRandom(list_t* list, int size){
 	for(int i=0; i<size-1; i++){
 		int item = rand()%100; // keep it to in between 1-100
 		start = clock();
-//		insert_sorted(list, item);
+		insert_sorted(&list, item);
 		end = clock();
 		cpu_time_used += ((double) (end - start)) / CLOCKS_PER_SEC;		
 	}
@@ -134,9 +136,11 @@ list_t testRandomInsert(int size){
 
 int main(){
 	int size=100000;
-	printf("Beginning Testing Suite for Linked List. N is: %d\n", size);
-	testSequentialInsert(size);
-	list_t list = testRandomInsert(size);	
-	testFindMax(&list, size);
+	// printf("Beginning Testing Suite for Linked List. N is: %d\n", size);
+	// testSequentialInsert(size);
+	// list_t list = testRandomInsert(size);	
+	// testFindMax(&list, size);
+	testInsertSortedReverse(size);
+	testInsertSortedRandom(size);
 
 }

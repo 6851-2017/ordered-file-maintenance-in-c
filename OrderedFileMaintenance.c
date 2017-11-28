@@ -47,7 +47,7 @@ static inline int bsr_word(int word) {
 }
 
 int get_depth(list_t* list, int len) {
-	return bsf_word(list->N/len);
+	return bsr_word(list->N/len);
 }
 
 
@@ -215,7 +215,40 @@ int* insert( list_t* list, int index, int elem) {
 	}
 	redistribute(list, node_index, len); 
 	return find_elem_pointer(list, node_index, elem);
+}
 
+int binary_search(list_t *list, int elem) {
+	int start = 0;
+	int end = list->N;
+	while (start < end) {
+		int mid = (start + end)/2;
+
+		int item = list->items[mid++];
+		while (item == -1) {
+			if (mid > end) {
+				mid = (start + end)/2 - 1;
+				item = list->items[mid--];
+				while (item == -1) {
+					item = list->items[mid--];
+					if (mid < start) {
+						return (start + end)/2;
+					}
+				}
+			} else {
+			    item = list->items[mid++];
+		    }
+		}
+		if (elem < item) {
+			end = mid;
+		} else {
+			start = mid;
+		}
+	}
+	return start;
+}
+
+int* insert_sorted(list_t *list, int elem) {
+	return insert(list, binary_search(list, elem), elem);
 }
 
 int find_index(list_t* list, int* elem_pointer){
@@ -358,31 +391,32 @@ void setup(list_t* list){
 	print_array(list);
 }
 
+/*
+int main(){
+	list_t list;
+	setup(&list);
+	print_array(&list);
+	while (1) {
+		printf("loc =");
+		int loc;
+		scanf("%d", &loc);
+		int elem;
+		printf("elem =");
+		scanf("%d", &elem);
+		insert(&list, loc, elem);
+		print_array(&list);
+	}
 
-// int main(){
-// 	list_t list;
-// 	setup(&list);
-// 	print_array(&list);
-// 	while (1) {
-// 		printf("loc =");
-// 		int loc;
-// 		scanf("%d", &loc);
-// 		int elem;
-// 		printf("elem =");
-// 		scanf("%d", &elem);
-// 		insert(&list, loc, elem);
-// 		print_array(&list);
-// 	}
+	// delete
+	// while (1) {
+	// 	printf("loc =");
+	// 	int loc;
+	// 	scanf("%d", &loc);
 
-// 	// delete
-// 	// while (1) {
-// 	// 	printf("loc =");
-// 	// 	int loc;
-// 	// 	scanf("%d", &loc);
+	// 	delete(loc);
+	// 	print_array();
+	// }
+}
+>>>>>>> ab668879e32e3e9d7a895d1fb9b4e6ed3d94ddca
 
-// 	// 	delete(loc);
-// 	// 	print_array();
-// 	// }
-// }
-
-
+*/
