@@ -359,30 +359,30 @@ void setup(list_t* list){
 }
 
 
-int main(){
-	list_t list;
-	setup(&list);
-	print_array(&list);
-	while (1) {
-		printf("loc =");
-		int loc;
-		scanf("%d", &loc);
-		int elem;
-		printf("elem =");
-		scanf("%d", &elem);
-		insert(&list, loc, elem);
-		print_array(&list);
-	}
+// int main(){
+// 	list_t list;
+// 	setup(&list);
+// 	print_array(&list);
+// 	while (1) {
+// 		printf("loc =");
+// 		int loc;
+// 		scanf("%d", &loc);
+// 		int elem;
+// 		printf("elem =");
+// 		scanf("%d", &elem);
+// 		insert(&list, loc, elem);
+// 		print_array(&list);
+// 	}
 
-	// delete
-	// while (1) {
-	// 	printf("loc =");
-	// 	int loc;
-	// 	scanf("%d", &loc);
+// 	// delete
+// 	// while (1) {
+// 	// 	printf("loc =");
+// 	// 	int loc;
+// 	// 	scanf("%d", &loc);
 
-	// 	delete(loc);
-	// 	print_array();
-	// }
-}
+// 	// 	delete(loc);
+// 	// 	print_array();
+// 	// }
+// }
 
 
