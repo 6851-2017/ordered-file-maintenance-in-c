@@ -75,7 +75,8 @@ void insert(list_t *list, int index, int elem) {
 int binary_search(list_t *list, int elem) {
 	int start = 0;
 	int end = list->size;
-	while (start < end) {
+	while (start+1 < end) {
+
 		int mid = (start + end)/2;
 		if (elem < list->items[mid]) {
 			end = mid;
@@ -83,7 +84,10 @@ int binary_search(list_t *list, int elem) {
 			start = mid;
 		}
 	}
-	return start;
+	if (elem < list->items[start]) {
+		return start;
+	}
+	return start+1;
 }
 
 void insert_sorted(list_t *list, int elem) {
