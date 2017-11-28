@@ -67,7 +67,7 @@ list_t testRandomInsert(int size){
 }
 
 void testInsertSortedReverse(int size){
-	printf("Testing Random Insert Sort:\n");
+	printf("Testing Reverse Insert Sort:\n");
 	list_t list;
 	setup(&list);
 
@@ -111,7 +111,6 @@ void testInsertSortedRandom(int size){
 		insert_sorted(&list, val);
 		end = clock();
 		cpu_time_used += ((double) (end - start)) / CLOCKS_PER_SEC;		
-		printf("Just inserted element number: %d , val: %d\n", i+1 ,val);
 	}
 
 	// for correction

@@ -17,7 +17,7 @@ void testFindMax(list_t* list , int size){
 }
 
 // Inserted items in reverse order, should come out as the correct order in the end
-void testInsertSortedReverse(list_t* list, int size){
+void testInsertSortedReverse(int size){
 	printf("Testing Insert Sorted with Reverse Values: \n");
 
 	clock_t start, end;
@@ -34,22 +34,23 @@ void testInsertSortedReverse(list_t* list, int size){
 		cpu_time_used += ((double) (end - start)) / CLOCKS_PER_SEC;		
 	}
 
-	node_t cur = list->items;
+	printf("Finished inserting!");
+	node_t cur = list.items[0];
 	for(int i=0; i<size-1; i++){
-		int val = cur->val;
-		int next_val = cur->next->val;
+		int val = cur.val;
+		int next_val = cur.next->val;
 		if(next_val<val){
-			printf("Insert Sorted does not work!")
+			printf("Insert Sorted does not work!");
 			break;
 		}
-		cur = cur->next;
+		cur = *(cur.next);
 	}
 	printf("%d reverse sequential insertions into an ordered list of size:%d, time: %f \n", size/2, size, cpu_time_used);
 
 }
 
 // Inserted items in reverse order, should come out as the correct order in the end
-void testInsertSortedRandom(list_t* list, int size){
+void testInsertSortedRandom(int size){
 
 	printf("Testing Insert Sorted with Random Values: \n");
 	clock_t start, end;
@@ -66,14 +67,14 @@ void testInsertSortedRandom(list_t* list, int size){
 		cpu_time_used += ((double) (end - start)) / CLOCKS_PER_SEC;		
 	}
 
-	node_t cur = list->items;
+	node_t cur = list.items[0];
 	for(int i=0; i<size-1; i++){
-		int val = cur->val;
-		int next_val = cur->next->val;
+		int val = cur.val;
+		int next_val = cur.next->val;
 		if(next_val<val){
-			printf("Insert Sorted does not work!")
+			printf("Insert Sorted does not work!");
 		}
-		cur = cur->next;
+		cur = *(cur.next);
 	}
 	printf("%d reverse sequential insertions into an ordered list of size:%d, time: %f \n", size/2, size, cpu_time_used);
 
