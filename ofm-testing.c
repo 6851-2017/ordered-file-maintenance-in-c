@@ -47,6 +47,7 @@ void testInsertSortedRandom(int size){
 		int val = list.items[index];
 		if(val!=-1){
 			if(val<prev_val){
+				print_array(&list);
 				printf("Insert Sorted is not working!\n");
 				break;
 			}
@@ -87,6 +88,7 @@ void testInsertSortedReverse(int size){
 
 			// assume we only insert positive values into the ofm
 			if(val<prev_val){
+				print_array(&list);
 				printf("Insert Sorted is not working!\n");
 				break;
 			}
@@ -160,8 +162,8 @@ int main(){
 	//testSequentialInsertOFM(&list, 82);
 	//testSequentialDelete(&list, 40);
 	//testRandomInsertOFM(N/4);	
-	testInsertSortedReverse(100);
-	testInsertSortedRandom(100);
+	testInsertSortedReverse(100000);
+	testInsertSortedRandom(100000);
 }
 
 

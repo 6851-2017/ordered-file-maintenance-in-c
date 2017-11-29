@@ -179,6 +179,16 @@ int* insert( list_t* list, int index, int elem) {
 	int node_index = find_leaf(list, index);
 	int level = list->H;
 	int len = list->logN;
+
+	// always deposit on the left
+	if (list->items[index] == -1) {
+		list->items[index] = elem;
+	} else {
+		slide_right(list, index);
+		list->items[index] = elem;
+	}
+
+
 	double density = get_density(list, node_index, len);
 
 	// spill over into next level up, node is completely full.
@@ -187,14 +197,6 @@ int* insert( list_t* list, int index, int elem) {
 	  redistribute(list, node_index, len*2);
 	} else {
 	  redistribute(list, node_index, len);
-	}
-
-	// always deposit on the left
-	if (list->items[index] == -1) {
-		list->items[index] = elem;
-	} else {
-		slide_right(list, index);
-		list->items[index] = elem;
 	}
 
 	pair_double density_b = density_bound(list, level);
@@ -219,7 +221,7 @@ int* insert( list_t* list, int index, int elem) {
 
 int binary_search(list_t *list, int elem) {
 	int start = 0;
-	int end = list->N;
+	int end = list->N-1;
 	while (start+1 < end) {
 
 		int mid = (start + end)/2;
@@ -227,16 +229,16 @@ int binary_search(list_t *list, int elem) {
 		int item = list->items[mid];
 		int change = 1;
 		int check = mid;
-		while (item == -1 && check > start) {
+		while (item == -1 && check >= start) {
 			check = mid+change;
-			if (check < end) {
+			if (check <= end) {
 				item = list->items[check];
 				if (item != -1) {
 					break;
 				}
 			}
 			check = mid-change;
-			if (check > start) {
+			if (check >= start) {
 				item = list->items[check];
 			}
 			change++;
