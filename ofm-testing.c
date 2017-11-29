@@ -25,7 +25,7 @@ void testSequentialInsertOFM(list_t* list, int size){
 }
 
 void testInsertSortedRandom(int size){
-	printf("Testing Insert Sorted Random for OFM");
+	printf("Testing Insert Sorted Random for OFM:\n");
 	clock_t start, end;
     double cpu_time_used = 0;
 	list_t list;
@@ -40,21 +40,27 @@ void testInsertSortedRandom(int size){
 	}
 
 	// verify correctness
+	int index = 0;
+	int prev_val = -1;
 
-	for(int i=0; i<size-1; i++){
-
-		int cur_val = list.items[i];
-		int next_val = list.items[i+1];
-		if(next_val!=-1 && cur_val!=-1 && next_val<cur_val){
-			printf("Insert Sorted Is not working!");
-			print_array(&list);
-			break;
+	while(index<size){
+		int val = list.items[index];
+		if(val!=-1){
+			if(val<prev_val){
+				printf("Insert Sorted is not working!\n");
+				break;
+			}
+			prev_val = val;
 		}
 
+		index++;
 	}
+
 	printf("%d random insertions into an ordered list of size:%d, time: %f \n", size, size, cpu_time_used);
 
 }
+
+
 
 void testInsertSortedReverse(int size){
 	printf("Testing Insert Sorted Reverse Sequential for OFM:\n");
@@ -72,17 +78,24 @@ void testInsertSortedReverse(int size){
 	}
 	printf("finished inserting\n");
 	// verify correctness
+	int index = 0;
+	int prev_val = -1;
 
-	for(int i=0; i<size-1; i++){
+	while(index<size){
+		int val = list.items[index];
+		if(val!=-1){
 
-		int cur_val = list.items[i];
-		int next_val = list.items[i+1];
-		if(next_val!=-1 && cur_val!=-1 && next_val<cur_val){
-			printf("Insert Sorted Is not working!\n");
-			break;
+			// assume we only insert positive values into the ofm
+			if(val<prev_val){
+				printf("Insert Sorted is not working!\n");
+				break;
+			}
+			prev_val = val;
 		}
 
+		index++;
 	}
+
 	printf("%d random insertions into an ordered list of size:%d, time: %f \n", size, size, cpu_time_used);
 
 }
