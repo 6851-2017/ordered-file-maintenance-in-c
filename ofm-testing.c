@@ -46,7 +46,8 @@ void testInsertSortedRandom(int size){
 		int cur_val = list.items[i];
 		int next_val = list.items[i+1];
 		if(next_val<cur_val){
-			printf("Insert Sorted Is not working!");
+			printf("Insert Sorted Is not working!\n");
+			print_array(&list);
 			break;
 		}
 

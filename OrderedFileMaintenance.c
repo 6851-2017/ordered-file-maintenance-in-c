@@ -219,24 +219,30 @@ int* insert( list_t* list, int index, int elem) {
 
 int binary_search(list_t *list, int elem) {
 	int start = 0;
-	int end = list->N;
-	while (start < end) {
-		int mid = (start + end)/2;
+	int end = list->N-1;
+	while (start+1 < end) {
 
-		int item = list->items[mid++];
-		while (item == -1) {
-			if (mid > end) {
-				mid = (start + end)/2 - 1;
-				item = list->items[mid--];
-				while (item == -1) {
-					item = list->items[mid--];
-					if (mid < start) {
-						return (start + end)/2;
-					}
+		int mid = (start + end)/2;
+		
+		int item = list->items[mid];
+		int change = 1;
+		int sign = 1;
+		int check = mid;
+		while (item == -1 && check > start) {
+			check = mid+change*sign;
+			if (start < check && check < end) {
+				item = list->items[check];
+				sign*=-1;
+				if (sign == 1) {
+					change+=1;
 				}
 			} else {
-			    item = list->items[mid++];
-		    }
+				item = list->items[mid];
+				sign*=-1;
+			}
+		}
+		if (item == -1) {
+			return mid;
 		}
 		if (elem < item) {
 			end = mid;
@@ -244,7 +250,10 @@ int binary_search(list_t *list, int elem) {
 			start = mid;
 		}
 	}
-	return start;
+	if (elem < list->items[start] && list->items[start] != -1) {
+		return start;
+	}
+	return start+1;
 }
 
 int* insert_sorted(list_t *list, int elem) {
