@@ -45,7 +45,7 @@ void testInsertSortedRandom(int size){
 
 		int cur_val = list.items[i];
 		int next_val = list.items[i+1];
-		if(next_val<cur_val){
+		if(next_val!=-1 && cur_val!=-1 && next_val<cur_val){
 			printf("Insert Sorted Is not working!");
 			print_array(&list);
 			break;
@@ -69,7 +69,6 @@ void testInsertSortedReverse(int size){
 		insert_sorted(&list, i);
 		end = clock();
 		cpu_time_used += ((double) (end - start)) / CLOCKS_PER_SEC;		
-		printf("inserted a value\n");
 	}
 	printf("finished inserting\n");
 	// verify correctness
@@ -78,8 +77,8 @@ void testInsertSortedReverse(int size){
 
 		int cur_val = list.items[i];
 		int next_val = list.items[i+1];
-		if(next_val<cur_val){
-			printf("Insert Sorted Is not working!");
+		if(next_val!=-1 && cur_val!=-1 && next_val<cur_val){
+			printf("Insert Sorted Is not working!\n");
 			break;
 		}
 
@@ -148,7 +147,7 @@ int main(){
 	//testSequentialInsertOFM(&list, 82);
 	//testSequentialDelete(&list, 40);
 	//testRandomInsertOFM(N/4);	
-	//testInsertSortedReverse(100);
+	testInsertSortedReverse(100);
 	testInsertSortedRandom(100);
 }
 
