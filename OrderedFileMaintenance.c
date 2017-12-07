@@ -75,7 +75,7 @@ pair_double density_bound(list_t* list, int depth) {
 // index: starting position in ofm structure
 // len: area to redistribute
 void redistribute(list_t* list, int index, int len) {
-	int *space = (int*)malloc(list->N*sizeof(*(list->items)));
+	int *space = (int*)malloc(len*sizeof(*(list->items)));
 	int j = 0;
 
 	// move all items in ofm in the range into

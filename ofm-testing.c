@@ -30,14 +30,15 @@ void testInsertSortedRandom(int size){
     double cpu_time_used = 0;
 	list_t list;
 	setup(&list);
-
+	start = clock();
 	for(int i=0; i<size; i++){
 		int item = rand()%100;
-		start = clock();
+		
 		insert_sorted(&list, item);
-		end = clock();
-		cpu_time_used += ((double) (end - start)) / CLOCKS_PER_SEC;		
+			
 	}
+	end = clock();
+	cpu_time_used += ((double) (end - start)) / CLOCKS_PER_SEC;	
 
 	// verify correctness
 	int index = 0;
@@ -58,6 +59,7 @@ void testInsertSortedRandom(int size){
 	}
 
 	printf("%d random insertions into an ordered list of size:%d, time: %f \n", size, size, cpu_time_used);
+	free(list.items);
 
 }
 
@@ -70,13 +72,14 @@ void testInsertSortedReverse(int size){
     double cpu_time_used = 0;
 	list_t list;
 	setup(&list);
-
+    start = clock();
 	for(int i=size-1; i>=0; i--){
-		start = clock();
+		
 		insert_sorted(&list, i);
-		end = clock();
-		cpu_time_used += ((double) (end - start)) / CLOCKS_PER_SEC;		
+			
 	}
+	end = clock();
+	cpu_time_used += ((double) (end - start)) / CLOCKS_PER_SEC;	
 	printf("finished inserting\n");
 	// verify correctness
 	int index = 0;
@@ -99,6 +102,7 @@ void testInsertSortedReverse(int size){
 	}
 
 	printf("%d random insertions into an ordered list of size:%d, time: %f \n", size, size, cpu_time_used);
+	free(list.items);
 
 }
 
@@ -165,6 +169,8 @@ int main(){
 	//testRandomInsertOFM(N/4);	
 	testInsertSortedReverse(n);
 	testInsertSortedRandom(n);
+	free(list.items);
+	return 0;
 }
 
 
