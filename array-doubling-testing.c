@@ -129,7 +129,7 @@ void testInsertSortedRandom(int size){
 
 
 int main(){
-	int size=100;
+	int size=100000;
 	//printf("Beginning Testing Suite for Array Doubling. N is: %d\n", size);
 	//testSequentialInsert(size);
 	//list_t list = testRandomInsert(size);	

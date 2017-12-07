@@ -156,14 +156,15 @@ void testRandomInsertOFM(list_t* list, int size){
 
 
 int main(){
+	int n = 1000000;
 	list_t list;
 	setup(&list);
 	//printf("Beginning Testing Suite. N is: %d\n", list.N);
 	//testSequentialInsertOFM(&list, 82);
 	//testSequentialDelete(&list, 40);
 	//testRandomInsertOFM(N/4);	
-	testInsertSortedReverse(100000);
-	testInsertSortedRandom(100000);
+	testInsertSortedReverse(n);
+	testInsertSortedRandom(n);
 }
 
 
