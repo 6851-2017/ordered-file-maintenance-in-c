@@ -24,13 +24,12 @@ typedef struct _pair_double {
 
 double get_density(list_t* list, int index, int len) {
 
-	double full = 0;
+	int full = 0;
 	for (int i = index; i < index+len; i++) {
-		if (list->items[i] != -1) {
-			full++;
-		}
+		full += (list->items[i] != -1);
 	}
-	return full/len;
+	double full_d = (double) full;
+	return full_d/len;
 }
 
 // find index of first 1-bit (least significant bit)
@@ -76,16 +75,15 @@ pair_double density_bound(list_t* list, int depth) {
 // index: starting position in ofm structure
 // len: area to redistribute
 void redistribute(list_t* list, int index, int len) {
-	int space[len];
+	int *space = (int*)malloc(len*sizeof(*(list->items)));
 	int j = 0;
 
 	// move all items in ofm in the range into
 	// a temp array
 	for (int i = index; i< index+len; i++) {
-		if (list->items[i]!=-1) {
-			space[j++] = list->items[i];
-			list->items[i] = -1;
-		}
+		space[j] = list->items[i];
+		j+=(list->items[i]!=-1);
+		list->items[i] = -1;
 	}
 
 	// evenly redistribute for a uniform density
@@ -96,6 +94,7 @@ void redistribute(list_t* list, int index, int len) {
 	  list->items[in] = space[i];
 	  index_d+=step;
 	}
+	free(space);
 }
 
 int isPowerOfTwo (int x) {
@@ -106,15 +105,10 @@ void double_list(list_t* list) {
 	list->N*=2;
 	list->logN = (1 << bsr_word(bsr_word(list->N)+1));
 	list->H = bsr_word(list->N/list->logN);
-	int *new_array = (int*)malloc(list->N*sizeof(*(list->items)));
-	for (int i = 0; i < list->N/2; i++) {
-		new_array[i] = list->items[i];
-	}
+	list->items = (int*)realloc(list->items, list->N*sizeof(*(list->items)));
 	for (int i = list->N/2; i < list->N; i++) {
-		new_array[i] = -1;
+		list->items[i] = -1;
 	}
-	free(list->items);
-	list->items = new_array;
 	redistribute(list, 0, list->N);
 }
 
@@ -128,7 +122,7 @@ void half_list(list_t* list) {
 		if (list->items[i] != -1) {
 			new_array[j++] = list->items[i];
 		}
-	}
+}
 	free(list->items);
 	list->items = new_array;
 	redistribute(list, 0, list->N);
