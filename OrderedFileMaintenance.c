@@ -390,7 +390,7 @@ void print_array(list_t* list) {
 void setup(list_t* list){
 
 	list->N = 16;
-	printf("%d\n", bsf_word(list->N));
+	//printf("%d\n", bsf_word(list->N));
 	list->logN = (1 << bsr_word(bsr_word(list->N)+1));
 	list->H = bsr_word(list->N/list->logN);
 	//printf("N = %d, logN = %d, loglogN = %d, H = %d\n", list->N, list->logN, list->loglogN, list->H);
@@ -400,7 +400,7 @@ void setup(list_t* list){
 		list->items[i] = -1;
 	}
 
-	print_array(list);
+	//print_array(list);
 }
 
 /*

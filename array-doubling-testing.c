@@ -98,21 +98,21 @@ void testInsertSortedReverse(int size){
 
 void testInsertSortedRandom(int size){
 
-	printf("Testing Random Insert Sort:\n");
+	printf("Testing Random Insert Sorted:\n");
 	list_t list;
 	setup(&list);
 
 	clock_t start, end;
     double cpu_time_used = 0;
+	start = clock();
 	
 	for(int i=0; i<size; i++){
 		int val = rand()%100;
-		start = clock();
 		insert_sorted(&list, val);
-		end = clock();
-		cpu_time_used += ((double) (end - start)) / CLOCKS_PER_SEC;		
 	}
-
+	end = clock();
+	cpu_time_used += ((double) (end - start)) / CLOCKS_PER_SEC;		
+	
 	// for correction
 	for(int i=0; i<size-1; i++){
 		int cur_val = list.items[i];
@@ -127,16 +127,26 @@ void testInsertSortedRandom(int size){
 
 }
 
+void testInsertSortedRandomVarious(){
+	printf("Tests Array Insert Sorted Random  sizes 10, 100, 1,000, 10,000, 100,000 \n\n");	
+	testInsertSortedRandom(10);
+	testInsertSortedRandom(100);
+	testInsertSortedRandom(1000);
+	testInsertSortedRandom(10000);
+	testInsertSortedRandom(100000);
+
+}
+
 
 int main(){
-	int size=100;
+	int size=100000;
 	//printf("Beginning Testing Suite for Array Doubling. N is: %d\n", size);
 	//testSequentialInsert(size);
 	//list_t list = testRandomInsert(size);	
 	//testFindMax(&list, size);
-	testInsertSortedReverse(size);
-	testInsertSortedRandom(size);
-
+	// testInsertSortedReverse(size);
+	// testInsertSortedRandom(size);
+	testInsertSortedRandomVarious();
 }
 
 

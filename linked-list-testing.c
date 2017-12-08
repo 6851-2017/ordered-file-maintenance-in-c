@@ -78,8 +78,8 @@ void testInsertSortedRandom(int size){
 			cur = *(cur.next);
 	    }
 	}
-	printf("%d random insertions into an ordered list of size:%d, time: %f \n", size/2, size, cpu_time_used);
-
+	//printf("%d random insertions into an ordered list of size:%d, time: %f \n", size, size, cpu_time_used);
+	printf("%d, %f\n", size, cpu_time_used);
 }
 
 
@@ -111,7 +111,7 @@ list_t testSequentialInsert(int size){
 // inserts N elements at random locations into OFM. 
 // prints out time it takes for N operations
 list_t testRandomInsert(int size){
-
+	printf("Linked List random insert: %d\n", size);
 	list_t list;
 
 	setup(&list);
@@ -125,9 +125,9 @@ list_t testRandomInsert(int size){
 	for(int i=0; i<size; i++){
 		int index = rand()%size;
 		node_t *node = get(&list, index);
-		//start = clock();
+		start = clock();
 		insert_here(&list, node, i);
-		//end = clock();
+		end = clock();
 		//cpu_time_used += ((double) (end - start)) / CLOCKS_PER_SEC;
 
 	}
@@ -136,14 +136,23 @@ list_t testRandomInsert(int size){
 	return list;
 }
 
+void testInsertSortedRandomVarious(){
+
+	printf("Tests Linked List Insert Sorted Random for sizes 10, 100, 1,000, 10,000, 100,000 \n\n");
+	testInsertSortedRandom(10);
+	testInsertSortedRandom(100);
+	testInsertSortedRandom(1000);
+	testInsertSortedRandom(10000);
+	testInsertSortedRandom(100000);
+
+}
 
 int main(){
-	int size=100;
+	int size=100000;
 	// printf("Beginning Testing Suite for Linked List. N is: %d\n", size);
 	// testSequentialInsert(size);
 	// list_t list = testRandomInsert(size);	
 	// testFindMax(&list, size);
-	testInsertSortedReverse(size);
-	testInsertSortedRandom(size);
+	testInsertSortedRandomVarious();
 
 }
