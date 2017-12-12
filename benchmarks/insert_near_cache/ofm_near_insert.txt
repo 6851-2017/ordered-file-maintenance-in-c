@@ -1,0 +1,60 @@
+dhcp-18-189-55-83:ordered-file-maintenance-in-c lisadeng$ valgrind --tool=cachegrind ./ofm_near_1000
+
+1000, 0.000000
+==6082==
+==6082== I   refs:      12,538,255
+==6082== I1  misses:         4,388
+==6082== LLi misses:         2,795
+==6082== I1  miss rate:       0.03%
+==6082== LLi miss rate:       0.02%
+==6082==
+==6082== D   refs:       6,036,388  (4,408,213 rd   + 1,628,175 wr)
+==6082== D1  misses:        25,034  (   21,906 rd   +     3,128 wr)
+==6082== LLd misses:         9,545  (    7,436 rd   +     2,109 wr)
+==6082== D1  miss rate:        0.4% (      0.5%     +       0.2%  )
+==6082== LLd miss rate:        0.2% (      0.2%     +       0.1%  )
+==6082==
+==6082== LL refs:           29,422  (   26,294 rd   +     3,128 wr)
+==6082== LL misses:         12,340  (   10,231 rd   +     2,109 wr)
+==6082== LL miss rate:         0.1% (      0.1%     +       0.1%  )
+dhcp-18-189-55-83:ordered-file-maintenance-in-c lisadeng$
+
+
+Insert Sorted Near Sizes: 10, 100, 1,000 , 10,000, 100,000
+Testing Insert Sorted Random  Near for OFM:
+10000, 0.000000
+==6133==
+==6133== I   refs:      110,160,260
+==6133== I1  misses:          4,296
+==6133== LLi misses:          2,803
+==6133== I1  miss rate:        0.00%
+==6133== LLi miss rate:        0.00%
+==6133==
+==6133== D   refs:       71,046,874  (55,035,612 rd   + 16,011,262 wr)
+==6133== D1  misses:         78,857  (    46,903 rd   +     31,954 wr)
+==6133== LLd misses:         14,052  (     7,515 rd   +      6,537 wr)
+==6133== D1  miss rate:         0.1% (       0.1%     +        0.2%  )
+==6133== LLd miss rate:         0.0% (       0.0%     +        0.0%  )
+==6133==
+==6133== LL refs:            83,153  (    51,199 rd   +     31,954 wr)
+==6133== LL misses:          16,855  (    10,318 rd   +      6,537 wr)
+==6133== LL miss rate:          0.0% (       0.0%     +        0.0%  )
+
+Testing Insert Sorted Random  Near for OFM:
+100000, 0.000000
+==6196==
+==6196== I   refs:      1,670,662,356
+==6196== I1  misses:            4,484
+==6196== LLi misses:            2,966
+==6196== I1  miss rate:          0.00%
+==6196== LLi miss rate:          0.00%
+==6196==
+==6196== D   refs:      1,142,842,127  (898,850,563 rd   + 243,991,564 wr)
+==6196== D1  misses:        1,996,800  (  1,151,706 rd   +     845,094 wr)
+==6196== LLd misses:           69,311  (     22,078 rd   +      47,233 wr)
+==6196== D1  miss rate:           0.2% (        0.1%     +         0.3%  )
+==6196== LLd miss rate:           0.0% (        0.0%     +         0.0%  )
+==6196==
+==6196== LL refs:           2,001,284  (  1,156,190 rd   +     845,094 wr)
+==6196== LL misses:            72,277  (     25,044 rd   +      47,233 wr)
+==6196== LL miss rate:            0.0% (        0.0%     +         0.0%  )
