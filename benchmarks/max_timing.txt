@@ -1,0 +1,30 @@
+max_timing
+
+ofm
+ max:99 size:1000, time:0.000003
+ max:99 size:10000, time:0.000003
+ max:99 size:100000, time:0.000063
+ max:99 size:1000000, time:0.000544
+
+set
+size:1000, time:0.000007, max_elem:999
+size:10000, time:0.000051, max_elem:9999
+size:100000, time:0.001278, max_elem:99999
+size:1000000, time:0.011064, max_elem:999999
+
+linked list:
+1000 random insertions, time: 0.000008, max:999999999,
+10000 random insertions, time: 0.000076, max:999999999,
+100000 random insertions, time: 0.001866, max:999999999,
+
+vector
+insertedsize:1000, time:0.000003, max:1000,
+insertedsize:10000, time:0.000003, max:10000,
+insertedsize:100000, time:0.000015, max:100000,
+insertedsize:1000000, time:0.000152, max:1000000,
+
+array:
+max:99, 1000, time: 0.000002
+max:99, 10000, time: 0.000005
+max:99, 100000, time: 0.000017
+max:99, 1000000, time: 0.000261

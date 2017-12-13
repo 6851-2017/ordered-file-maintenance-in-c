@@ -1,0 +1,102 @@
+SET cachegrind
+
+dhcp-18-189-55-83:ordered-file-maintenance-in-c lisadeng$ valgrind --tool=cachegrind ./vect_1000
+==32210== Cachegrind, a cache and branch-prediction profiler
+==32210== Copyright (C) 2002-2017, and GNU GPL'd, by Nicholas Nethercote et al.
+==32210== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+==32210== Command: ./vect_1000
+==32210==
+--32210-- warning: L3 cache found, using its data for the LL simulation.
+--32210-- run: /usr/bin/dsymutil "./vect_1000"
+warning: no debug symbols in executable (-arch x86_64)
+1000, 0.043268
+==32210==
+==32210== I   refs:      9,790,112
+==32210== I1  misses:        4,257
+==32210== LLi misses:        2,891
+==32210== I1  miss rate:      0.04%
+==32210== LLi miss rate:      0.03%
+==32210==
+==32210== D   refs:      4,461,898  (2,719,885 rd   + 1,742,013 wr)
+==32210== D1  misses:       25,659  (   22,588 rd   +     3,071 wr)
+==32210== LLd misses:        9,605  (    7,455 rd   +     2,150 wr)
+==32210== D1  miss rate:       0.6% (      0.8%     +       0.2%  )
+==32210== LLd miss rate:       0.2% (      0.3%     +       0.1%  )
+==32210==
+==32210== LL refs:          29,916  (   26,845 rd   +     3,071 wr)
+==32210== LL misses:        12,496  (   10,346 rd   +     2,150 wr)
+==32210== LL miss rate:        0.1% (      0.1%     +       0.1%  )
+dhcp-18-189-55-83:ordered-file-maintenance-in-c lisadeng$ valgrind --tool=cachegrind ./vect_10000
+==32218== Cachegrind, a cache and branch-prediction profiler
+==32218== Copyright (C) 2002-2017, and GNU GPL'd, by Nicholas Nethercote et al.
+==32218== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+==32218== Command: ./vect_10000
+==32218==
+--32218-- warning: L3 cache found, using its data for the LL simulation.
+--32218-- run: /usr/bin/dsymutil "./vect_10000"
+warning: no debug symbols in executable (-arch x86_64)
+10000, 0.326122
+==32218==
+==32218== I   refs:      44,237,926
+==32218== I1  misses:         4,312
+==32218== LLi misses:         2,894
+==32218== I1  miss rate:       0.01%
+==32218== LLi miss rate:       0.01%
+==32218==
+==32218== D   refs:      28,471,933  (16,035,958 rd   + 12,435,975 wr)
+==32218== D1  misses:        78,594  (    62,818 rd   +     15,776 wr)
+==32218== LLd misses:        14,236  (     7,557 rd   +      6,679 wr)
+==32218== D1  miss rate:        0.3% (       0.4%     +        0.1%  )
+==32218== LLd miss rate:        0.1% (       0.0%     +        0.1%  )
+==32218==
+==32218== LL refs:           82,906  (    67,130 rd   +     15,776 wr)
+==32218== LL misses:         17,130  (    10,451 rd   +      6,679 wr)
+==32218== LL miss rate:         0.0% (       0.0%     +        0.1%  )
+
+
+==32232== Command: ./vect_100000
+==32232==
+--32232-- warning: L3 cache found, using its data for the LL simulation.
+--32232-- run: /usr/bin/dsymutil "./vect_100000"
+warning: no debug symbols in executable (-arch x86_64)
+100000, 3.630203
+==32232==
+==32232== I   refs:      431,307,240
+==32232== I1  misses:          4,326
+==32232== LLi misses:          2,935
+==32232== I1  miss rate:        0.00%
+==32232== LLi miss rate:        0.00%
+==32232==
+==32232== D   refs:      299,744,796  (167,337,554 rd   + 132,407,242 wr)
+==32232== D1  misses:        433,237  (    335,553 rd   +      97,684 wr)
+==32232== LLd misses:         60,111  (      8,445 rd   +      51,666 wr)
+==32232== D1  miss rate:         0.1% (        0.2%     +         0.1%  )
+==32232== LLd miss rate:         0.0% (        0.0%     +         0.0%  )
+==32232==
+==32232== LL refs:           437,563  (    339,879 rd   +      97,684 wr)
+==32232== LL misses:          63,046  (     11,380 rd   +      51,666 wr)
+==32232== LL miss rate:          0.0% (        0.0%     +         0.0%  )
+dhcp-18-189-55-83:ordered-file-maintenance-in-c lisadeng$
+
+==32415== Command: ./vect_1000000
+==32415==
+--32415-- warning: L3 cache found, using its data for the LL simulation.
+--32415-- run: /usr/bin/dsymutil "./vect_1000000"
+warning: no debug symbols in executable (-arch x86_64)
+1000000, 40.612217
+==32415==
+==32415== I   refs:      4,681,716,355
+==32415== I1  misses:            4,373
+==32415== LLi misses:            3,186
+==32415== I1  miss rate:          0.00%
+==32415== LLi miss rate:          0.00%
+==32415==
+==32415== D   refs:      3,321,352,116  (1,857,234,601 rd   + 1,464,117,515 wr)
+==32415== D1  misses:        1,880,542  (    1,249,001 rd   +       631,541 wr)
+==32415== LLd misses:        1,025,987  (      523,012 rd   +       502,975 wr)
+==32415== D1  miss rate:           0.1% (          0.1%     +           0.0%  )
+==32415== LLd miss rate:           0.0% (          0.0%     +           0.0%  )
+==32415==
+==32415== LL refs:           1,884,915  (    1,253,374 rd   +       631,541 wr)
+==32415== LL misses:         1,029,173  (      526,198 rd   +       502,975 wr)
+==32415== LL miss rate:            0.0% (          0.0%     +           0.0%  )

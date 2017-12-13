@@ -45,10 +45,10 @@ void testMax(int size){
 	}
 	
 	start = clock();
-	ofm_max(&list);
+	int max_elem = ofm_max(&list);
 	end = clock();
 	cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;	
-	printf("size:%d, time:%f\n", size, cpu_time_used);
+	printf(" max:%d size:%d, time:%f\n", max_elem, size, cpu_time_used);
 	free(list.items);
 }
 
@@ -76,7 +76,7 @@ void testSequentialInsertOFM(list_t* list, int size){
 }
 
 void testInsertSortedRandom(int size){
-	printf("Testing Insert Sorted Random for OFM:\n");
+	//printf("Testing Insert Sorted Random for OFM:\n");
 	clock_t start, end;
     double cpu_time_used = 0;
 	list_t list;
@@ -248,12 +248,13 @@ int main(){
 	//testRandomInsertOFM(N/4);	
 	//testInsertSortedReverse(100000);
 	//testInsertSortedRandom(1000000);
-	//testInsertSortedNearVarious();
+	//testInsertSortedVarious();
+	testInsertNearRandom(1000000);
 	//testInsertSortedRandom(10000);
-	testMax(1000);
-	testMax(10000);
-	testMax(100000);
-	testMax(1000000);
+	// testMax(1000);
+	// testMax(10000);
+	// testMax(100000);
+	// testMax(1000000);
 	// testInsertSortedReverse(n);
 	// testInsertSortedRandom(n);
 	free(list.items);

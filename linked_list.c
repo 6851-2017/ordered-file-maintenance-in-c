@@ -29,6 +29,17 @@ int max(list_t *list) {
 	}
 	return current_max;
 }
+	
+// just to insert something quickly
+// at the front 
+void quick_insert(list_t *list, int item){
+	node_t *node;
+	node = (node_t*) malloc(sizeof(*node));
+	node->val = item;
+	node->next = list->items;
+	node->prev = NULL;
+	list->items = node;
+}
 
 // if index is greater than the length of the list this returns last element
 node_t* get(list_t *list, int index) {
@@ -113,8 +124,12 @@ void print_array(list_t *list) {
 
 void setup(list_t *list){
 	list->items = NULL;
+
 }
 
+void setupSize(list_t *list, int size){
+	list->items = (node_t*)malloc(size*sizeof(*(list->items)));
+}
 /*
 int main(){
 	list_t list;
