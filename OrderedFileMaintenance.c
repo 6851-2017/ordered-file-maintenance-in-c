@@ -32,6 +32,17 @@ double get_density(list_t* list, int index, int len) {
 	return full_d/len;
 }
 
+int ofm_max(list_t* list){
+	int size = list->N;
+	int max_elem = -1;
+	for(int i=0; i<size; i++){
+		if(list->items[i]>max_elem){
+			max_elem = list->items[i];
+		}
+	}
+	return max_elem;
+}
+
 // find index of first 1-bit (least significant bit)
 static inline int bsf_word(int word) {
   int result;

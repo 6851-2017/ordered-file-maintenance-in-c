@@ -1,6 +1,57 @@
 #include <time.h>
 #include "OrderedFileMaintenance.c"
 
+
+
+
+void testInsertNearRandom(int size){
+	printf("Testing Insert Sorted Random  Near for OFM:\n");
+	clock_t start, end;
+    double cpu_time_used = 0;
+	list_t list;
+	setup(&list);
+	
+	insert_first(&list, 0);
+	int* item = get_first(&list);
+	for(int i=0; i<size-1; i++){
+		int random = rand()%2;
+		if(random==1){
+			item = insert_after(&list, i+1, item);
+		}
+		else{
+			item = insert_before(&list, i+1, item);
+		}
+	}
+
+
+	printf("%d, %f \n",size, cpu_time_used);
+	free(list.items);
+
+}
+
+
+void testMax(int size){
+	clock_t start, end;
+    double cpu_time_used = 0;
+	
+	int max_item = -1;
+	list_t list;
+	setup(&list);
+
+	for(int i=0; i<size; i++){
+		int item = rand()%100;
+		
+		insert_sorted(&list, item);
+	}
+	
+	start = clock();
+	ofm_max(&list);
+	end = clock();
+	cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;	
+	printf("size:%d, time:%f\n", size, cpu_time_used);
+	free(list.items);
+}
+
 // inserts N elements sequentially into ofm.
 // prints out time it takes for N operations
 void testSequentialInsertOFM(list_t* list, int size){
@@ -58,7 +109,8 @@ void testInsertSortedRandom(int size){
 		index++;
 	}
 
-	printf("%d random insertions into an ordered list of size:%d, time: %f \n", size, size, cpu_time_used);
+	//printf("%d random insertions into an ordered list of size:%d, time: %f \n", size, size, cpu_time_used);
+	printf("%d, %f \n",size, cpu_time_used);	
 	free(list.items);
 
 }
@@ -70,6 +122,19 @@ void testInsertSortedVarious(){
 	testInsertSortedRandom(1000);
 	testInsertSortedRandom(10000);
 	testInsertSortedRandom(100000);
+	testInsertSortedRandom(1000000);
+
+}
+
+void testInsertSortedNearVarious(){
+	printf("Insert Sorted Near Sizes: 10, 100, 1,000 , 10,000, 100,000\n");
+	// testInsertNearRandom(10);
+	// testInsertNearRandom(100);
+	testInsertNearRandom(1000);
+	//testInsertNearRandom(10000);
+	//testInsertNearRandom(100000);
+	//testInsertNearRandom(1000000);
+
 }
 
 void testInsertSortedReverse(int size){
@@ -164,7 +229,14 @@ void testRandomInsertOFM(list_t* list, int size){
 
 //sorting -> insert a bunch of elts, and maintain the fact that they're always sorted. 
 
-
+void testInsertGtime(int size){
+	
+	list_t list;
+	setup(&list);
+	for(int i=0; i< size; i++){
+		insert_first(&list, i);	}
+	free(list.items);
+}
 
 int main(){
 	int n = 1000000;
@@ -174,17 +246,18 @@ int main(){
 	//testSequentialInsertOFM(&list, 82);
 	//testSequentialDelete(&list, 40);
 	//testRandomInsertOFM(N/4);	
-<<<<<<< HEAD
 	//testInsertSortedReverse(100000);
-	//testInsertSortedRandom(100000);
-	testInsertSortedVarious();
-
-=======
-	testInsertSortedReverse(n);
-	testInsertSortedRandom(n);
+	//testInsertSortedRandom(1000000);
+	//testInsertSortedNearVarious();
+	//testInsertSortedRandom(10000);
+	testMax(1000);
+	testMax(10000);
+	testMax(100000);
+	testMax(1000000);
+	// testInsertSortedReverse(n);
+	// testInsertSortedRandom(n);
 	free(list.items);
 	return 0;
->>>>>>> c4ed98f4ee0f09f9c7144b0db60570409c56f587
 }
 
 
